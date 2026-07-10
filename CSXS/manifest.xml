@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ExtensionManifest Version="7.0"
                    ExtensionBundleId="com.koseimarker.extension"
-                   ExtensionBundleVersion="1.0.0"
+                   ExtensionBundleVersion="1.1.0"
                    ExtensionBundleName="校正マーカー">
   <ExtensionList>
     <Extension Id="com.koseimarker.panel" Version="1.0.0"/>

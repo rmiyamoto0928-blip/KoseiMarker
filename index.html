@@ -25,13 +25,16 @@
       </select>
     </label>
 
-    <label class="fld">全体微調整（フレーム・マイナスで前へ）
+    <label class="fld">微調整（フレーム・秒精度TCのみに適用 ※0:34 のような秒までのTCが対象）
       <input id="offset" type="number" value="0" step="1">
     </label>
 
     <div class="datahead">
-      <span>貼り付けデータ（タブ区切り：タイムコード / 現在 / 修正案）</span>
-      <button id="dataClear" class="mini">クリア</button>
+      <span>貼り付けデータ（タブ区切り / 縦並び / レポート表）</span>
+      <span class="headbtns">
+        <button id="loadFile" class="mini wide">📄 指示書読込</button>
+        <button id="dataClear" class="mini">クリア</button>
+      </span>
     </div>
     <textarea id="data" placeholder="00;00;05;10	これから向かう現場は	これから向かう現場は？&#10;00;00;26;20	5段または1m以上	5段以上、または1m以上"></textarea>
 
@@ -47,11 +50,14 @@
       <span>マーカー一覧（クリックで移動）</span>
       <button id="listRefresh" class="mini">更新</button>
     </div>
+    <div id="counts" class="counts"></div>
     <div class="filterbar">
       <button class="filt active" data-filter="all">全部</button>
       <button class="filt" data-filter="kosei">校正</button>
+      <button class="filt" data-filter="remain">残り</button>
       <button class="filt" data-filter="other">その他</button>
     </div>
+    <input id="search" class="search" type="text" placeholder="🔍 検索（テキスト・コメント）">
     <div id="markerList" class="mlist"></div>
 
     <div class="loghead">
@@ -62,6 +68,7 @@
   </div>
 
   <script src="js/CSInterface.js"></script>
+  <script src="js/parser.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

@@ -1,7 +1,8 @@
 // ExtendScript host (Premiere Pro) ※ ExtendScript には JSON が無いので手組みで返す
 
 function esc(s) {
-    return String(s).replace(/\\/g, "\\\\").replace(/"/g, "\\\"");
+    return String(s).replace(/\\/g, "\\\\").replace(/"/g, "\\\"")
+        .replace(/\r/g, "\\r").replace(/\n/g, "\\n");
 }
 
 function getSeqInfo() {
@@ -54,6 +55,71 @@ function gotoMarker(ticks) {
     return '{"ok":1}';
 }
 
+// listMarkers の並び順 idx 番目のマーカーを取得し、ticks が一致するか検証する。
+// 同一ticksのマーカーが複数あっても取り違えないための二重キー方式。
+// パネル表示後にマーカーが増減して idx がズレていたら ticks で探し直す。
+function _findMarker(seq, idx, ticks) {
+    var m = seq.markers.getFirstMarker();
+    var i = 0;
+    while (m) {
+        if (i === parseInt(idx, 10)) {
+            try { if (String(m.start.ticks) === String(ticks)) { return m; } } catch (e) {}
+            break; // idxズレ → ticksで探し直し
+        }
+        m = seq.markers.getNextMarker(m);
+        i++;
+    }
+    m = seq.markers.getFirstMarker();
+    while (m) {
+        try { if (String(m.start.ticks) === String(ticks)) { return m; } } catch (e) {}
+        m = seq.markers.getNextMarker(m);
+    }
+    return null;
+}
+
+// マーカー色（環境によって未対応のことがあるので必ず try で包む）0=緑 1=赤
+function _trySetColor(mk, idx) {
+    try { mk.setColorByIndex(idx); return 1; } catch (e) { return 0; }
+}
+
+// 済み⇔未済の切り替え。正は名前の「校正✅」プレフィックス（色APIが無くても成立）
+function setMarkerDone(idx, ticks, done) {
+    var seq = app.project.activeSequence;
+    if (!seq) { return '{"error":"アクティブなシーケンスがありません"}'; }
+    var m = _findMarker(seq, idx, ticks);
+    if (!m) { return '{"error":"マーカーが見つかりません（一覧を更新してください）"}'; }
+    var name = String(m.name || "");
+    var colored;
+    if (String(done) === "1") {
+        if (name.indexOf("校正✅") !== 0) { m.name = name.replace(/^校正\s*/, "校正✅ "); }
+        colored = _trySetColor(m, 0); // 緑
+    } else {
+        m.name = name.replace(/^校正✅\s*/, "校正 ");
+        colored = _trySetColor(m, 1); // 赤
+    }
+    return '{"ok":1,"colored":' + colored + '}';
+}
+
+// マーカー1件削除
+function deleteMarkerByTicks(idx, ticks) {
+    var seq = app.project.activeSequence;
+    if (!seq) { return '{"error":"アクティブなシーケンスがありません"}'; }
+    var m = _findMarker(seq, idx, ticks);
+    if (!m) { return '{"error":"マーカーが見つかりません（一覧を更新してください）"}'; }
+    seq.markers.deleteMarker(m);
+    return '{"removed":1}';
+}
+
+// マーカーのコメントを書き換え
+function setMarkerComment(idx, ticks, comment) {
+    var seq = app.project.activeSequence;
+    if (!seq) { return '{"error":"アクティブなシーケンスがありません"}'; }
+    var m = _findMarker(seq, idx, ticks);
+    if (!m) { return '{"error":"マーカーが見つかりません（一覧を更新してください）"}'; }
+    m.comments = comment;
+    return '{"ok":1}';
+}
+
 // 名前が「校正」で始まるマーカーを削除
 function clearKoseiMarkers() {
     var seq = app.project.activeSequence;
@@ -90,6 +156,7 @@ function addMarkers(payload) {
         var mk = seq.markers.createMarker(sec);
         mk.name = f[1];
         mk.comments = f[2];
+        _trySetColor(mk, 1); // 校正マーカーは赤（未対応環境では無視される）
         added++;
         try {
             var actualTicks = parseFloat(mk.start.ticks);

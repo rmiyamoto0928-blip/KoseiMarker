@@ -52,6 +52,8 @@ textarea {
 
 .datahead { display: flex; align-items: center; justify-content: space-between; color: #aaa; }
 .datahead .mini { width: auto; padding: 0 8px; }
+.headbtns { display: flex; gap: 4px; }
+.mini.wide { width: auto; padding: 0 8px; }
 
 .listhead { display: flex; align-items: center; justify-content: space-between; color: #888; margin-top: 4px; }
 .listhead .mini { width: auto; padding: 0 8px; }
@@ -63,16 +65,44 @@ textarea {
 .filt:hover { background: #3d3d3d; }
 .filt.active { background: #2d7dd2; color: #fff; border-color: #2d7dd2; }
 
+.counts { color: #9fd49f; font-size: 11px; min-height: 14px; }
+
+.search {
+  width: 100%; background: #222; color: #eee; border: 1px solid #555;
+  border-radius: 3px; padding: 4px 6px; height: 24px; font-size: 11px;
+  margin-bottom: 4px;
+}
+
 .mlist {
   max-height: 240px; overflow: auto;
   border: 1px solid #444; border-radius: 3px; background: #232323;
 }
 .mlist .empty { padding: 8px; color: #777; }
-.mitem { padding: 6px 8px; border-bottom: 1px solid #383838; cursor: pointer; }
+.mitem { padding: 6px 8px; border-bottom: 1px solid #383838; cursor: pointer; border-left: 3px solid transparent; }
+.mitem.kosei { border-left-color: #c84a4a; }
 .mitem:last-child { border-bottom: none; }
 .mitem:hover { background: #2f3b46; }
 .mitem .mname { color: #7fb3e0; font-size: 10px; }
 .mitem .mcmt { color: #d8d8d8; font-size: 11px; white-space: pre-wrap; margin-top: 2px; }
+.mitem.done { border-left-color: #4a9e4a; opacity: 0.65; }
+.mitem.done .mcmt { text-decoration: line-through; }
+.mitem.sel { background: #33424e; outline: 1px solid #2d7dd2; }
+
+.mact { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+.act {
+  background: #3a3a3a; color: #ccc; border: 1px solid #555;
+  border-radius: 3px; cursor: pointer; padding: 2px 7px; font-size: 10px;
+}
+.act:hover { background: #464646; }
+.act.doneBtn { color: #8fdc8f; border-color: #4a6e4a; }
+.act.save { color: #8fc7ff; border-color: #3a5a7a; }
+.act.delConfirm { color: #fff; background: #a03030; border-color: #c04040; }
+
+.cedit {
+  width: 100%; min-height: 48px; margin-top: 4px;
+  background: #1e1e1e; color: #eee; border: 1px solid #2d7dd2;
+  border-radius: 3px; padding: 4px; font-size: 11px; resize: vertical;
+}
 
 .loghead { display: flex; align-items: center; justify-content: space-between; color: #888; margin-top: 4px; }
 .loghead .mini { width: auto; padding: 0 8px; }
