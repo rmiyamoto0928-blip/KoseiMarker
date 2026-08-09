@@ -32,7 +32,7 @@
         </Lifecycle>
         <UI>
           <Type>Panel</Type>
-          <Menu>校正マーカー</Menu>
+          <Menu>チェック｜校正マーカー</Menu>
           <Geometry>
             <Size>
               <Height>460</Height>
