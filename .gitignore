@@ -1,1 +1,4 @@
 .DS_Store
+
+# Claude Code のフック用ローカル状態
+.claude/.km-stop-state
