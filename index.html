@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="css/style.css">
+  <!-- 「選ぶ欄」の共通部品。正本は ~/premiere-extensions/shared/ 、配布は shared/deploy.sh -->
+  <link rel="stylesheet" href="css/smartselect.css">
 </head>
 <body>
   <div class="wrap">
@@ -70,5 +72,7 @@
   <script src="js/CSInterface.js"></script>
   <script src="js/parser.js"></script>
   <script src="js/main.js"></script>
+  <!-- 本体の js のあとに読む。先に欄の中身が作られるので、最初から正しい文字が出る -->
+  <script src="js/smartselect.js"></script>
 </body>
 </html>

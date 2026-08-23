@@ -1,0 +1,79 @@
+/* smartselect.css — 「選ぶ欄」を押したときに出る一覧の見た目。
+ *
+ * 閉じている間の欄（<select> そのもの）には一切さわらない。
+ * だから各パネルの色・幅・高さはそのまま効く＝このCSSに書くことは何も無い。
+ *
+ * 色は開いたときに JS が欄を実測して --ss-menu-* に差し込む。
+ * 差し込めなかったときのために、既定値は下の :root にまとめてある。
+ * ★色の生の値（#xxxxxx / rgba(...)）は :root の中だけに書くこと。
+ *   規則の中に直接書くと「配色の正本」が2か所に割れて、配色を変えたときに片方が取り残される
+ *   （SozaiDrop の回帰テストがこれを見張っていて、破ると落ちる）。
+ */
+
+:root {
+    --ss-menu-bg-default: #2f2f2f;
+    --ss-menu-fg-default: #e8e8e8;
+    --ss-menu-border-default: #5a5a5a;
+    --ss-accent-default: #0096d6;      /* Premiere の水色 */
+    --ss-accent-fg-default: #ffffff;
+    --ss-on-bg-default: rgba(0, 150, 214, 0.22);
+    --ss-menu-shadow-default: 0 4px 16px rgba(0, 0, 0, 0.55);
+    --ss-font-default: 12px;
+    --ss-radius-default: 3px;
+}
+
+/* 一覧。body直下に浮かせる（親が overflow:hidden でも切られない）。
+   位置と高さは JS が画面に合わせて決める＝パネルの外へはみ出さない */
+.ss-menu {
+    position: fixed;
+    z-index: 9999;
+    overflow-y: auto;
+    box-sizing: border-box;
+    background: var(--ss-menu-bg, var(--ss-menu-bg-default));
+    color: var(--ss-menu-fg, var(--ss-menu-fg-default));
+    border: 1px solid var(--ss-menu-border, var(--ss-menu-border-default));
+    border-radius: var(--ss-radius, var(--ss-radius-default));
+    box-shadow: var(--ss-menu-shadow-default);
+    padding: 2px 0;
+    font-size: var(--ss-font, var(--ss-font-default));
+}
+
+.ss-menu.ss-hidden { display: none; }
+
+.ss-item {
+    padding: 5px 10px;
+    cursor: pointer;
+    /* 長い名前は折り返して全部読ませる（切って隠さない）。
+       <select> は text-overflow が効かず「…」も出ずに切れるので、そこがこの一覧の利点 */
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.35;
+}
+
+.ss-item:hover {
+    background: var(--ss-accent, var(--ss-accent-default));
+    color: var(--ss-accent-fg, var(--ss-accent-fg-default));
+}
+
+/* いま選ばれている行の印。
+   ★べた塗りの色を決め打ちにしないこと。Premiereを明るい配色にすると
+     文字色も明るくなり、暗いべた塗りの上で読めなくなる。
+     半透明の水色なら、明るい画面でも暗い画面でも下の文字がそのまま読める。 */
+.ss-item.ss-on {
+    background: var(--ss-on-bg, var(--ss-on-bg-default));
+    font-weight: bold;
+}
+
+.ss-item.ss-on:hover {
+    background: var(--ss-accent, var(--ss-accent-default));
+    color: var(--ss-accent-fg, var(--ss-accent-fg-default));
+}
+
+.ss-item.ss-dis { cursor: default; color: var(--ss-menu-border, var(--ss-menu-border-default)); }
+.ss-item.ss-dis:hover { background: none; }
+
+.ss-empty {
+    padding: 6px 10px;
+    white-space: nowrap;
+    color: var(--ss-menu-border, var(--ss-menu-border-default));
+}
