@@ -21,6 +21,23 @@ function jp(s, label) {
     catch (e) { fail++; console.error('FAIL: ' + label + '  JSONパース不能: ' + String(e && e.message ? e.message : e)); return null; }
 }
 
+// ---------------------------------------------------------------- パネルのファイルが読み込める形か
+// 2026-09-22 実機：textdiag.js の正規表現に U+2028/U+2029 が生のまま入っていて構文エラー
+// → パネルの画面側が丸ごと動かず、シーケンス名が「—」のまま。テストが textdiag.js を
+// 読んでいなかったので見逃した。画面側のファイルも「読めるか」だけは必ず確かめる。
+(function () {
+    var dir = path.join(__dirname, '..', 'diag');
+    ['textdiag.js', 'extract.js', 'textdiag.jsx'].forEach(function (name) {
+        var src = fs.readFileSync(path.join(dir, name), 'utf8');
+        ok(!/[\u2028\u2029]/.test(src), name + ' に行区切り文字（U+2028/U+2029）が生のまま入っていない');
+        if (/\.js$/.test(name)) {
+            var err = null;
+            try { new Function(src); } catch (e) { err = e; }
+            ok(err === null, name + ' が構文エラーなく読める' + (err ? '  (' + err.message + ')' : ''));
+        }
+    });
+})();
+
 var TICKS = 254016000000;
 var NEEDLE = 'TEXT_EXTRACT_TEST_12345';
 

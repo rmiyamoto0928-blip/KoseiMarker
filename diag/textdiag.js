@@ -34,7 +34,7 @@
         return String(s)
             .replace(/\\/g, '\\\\').replace(/'/g, "\\'")
             .replace(/\r/g, '\\r').replace(/\n/g, '\\n')
-            .replace(/ /g, '\\u2028').replace(/ /g, '\\u2029');
+            .replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
     }
     function evalHost(call, cb) {
         if (!host) { showErr('診断ホストスクリプト未ロード'); return; }
