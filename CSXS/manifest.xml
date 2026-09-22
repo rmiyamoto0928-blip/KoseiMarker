@@ -5,6 +5,8 @@
                    ExtensionBundleName="校正マーカー">
   <ExtensionList>
     <Extension Id="com.koseimarker.panel" Version="1.0.0"/>
+    <!-- 開発・調査専用の診断パネル（読み取りのみ。本番パネルとは独立） -->
+    <Extension Id="com.koseimarker.textdiag" Version="1.0.0"/>
   </ExtensionList>
   <ExecutionEnvironment>
     <HostList>
@@ -41,6 +43,39 @@
             <MinSize>
               <Height>360</Height>
               <Width>260</Width>
+            </MinSize>
+          </Geometry>
+        </UI>
+      </DispatchInfo>
+    </Extension>
+
+    <!-- ===================== 診断パネル（開発・調査専用） =====================
+         シーケンスを読み取って診断JSONを書き出すだけのパネル。
+         本番パネル（com.koseimarker.panel）の定義には一切影響しない。
+         不要になったらこの Extension ブロックと ExtensionList の1行を消せば元に戻る。 -->
+    <Extension Id="com.koseimarker.textdiag">
+      <DispatchInfo>
+        <Resources>
+          <MainPath>./diag/textdiag.html</MainPath>
+          <ScriptPath>./diag/textdiag.jsx</ScriptPath>
+          <CEFCommandLine>
+            <Parameter>--enable-nodejs</Parameter>
+          </CEFCommandLine>
+        </Resources>
+        <Lifecycle>
+          <AutoVisible>true</AutoVisible>
+        </Lifecycle>
+        <UI>
+          <Type>Panel</Type>
+          <Menu>調査｜テキスト取得診断</Menu>
+          <Geometry>
+            <Size>
+              <Height>640</Height>
+              <Width>380</Width>
+            </Size>
+            <MinSize>
+              <Height>400</Height>
+              <Width>300</Width>
             </MinSize>
           </Geometry>
         </UI>

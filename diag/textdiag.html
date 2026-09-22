@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* 診断パネル専用の最小スタイル（本番 css/style.css には触らない） */
+    .warn { background: #3a2a00; border: 1px solid #7a5a00; color: #ffd98a;
+            padding: 8px; border-radius: 4px; font-size: 11px; line-height: 1.6; margin-bottom: 10px; }
+    .kv { font-size: 11px; line-height: 1.7; }
+    .kv b { color: #9cf; font-weight: normal; }
+    .tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .tbl th, .tbl td { border-bottom: 1px solid #333; padding: 3px 4px; text-align: left;
+                       vertical-align: top; word-break: break-all; }
+    .tbl th { color: #9cf; font-weight: normal; }
+    .scroll { max-height: 260px; overflow: auto; border: 1px solid #333; border-radius: 4px; }
+    .big { font-size: 20px; font-weight: bold; }
+    .okc { color: #7fdc7f; }
+    .badc { color: #ff8a8a; }
+    .midc { color: #ffd98a; }
+    .mono { font-family: Menlo, Consolas, monospace; font-size: 10px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="warn">
+      <b>⚠️ 開発・調査専用パネル</b><br>
+      シーケンスを<b>読み取るだけ</b>で、マーカー・クリップ・テキストを一切変更しません。<br>
+      本番の「チェック｜校正マーカー」パネルとは完全に独立しています。
+    </div>
+
+    <div class="seqline">
+      <span class="lbl">シーケンス</span>
+      <span id="seqName" class="seq">—</span>
+      <button id="seqRefresh" class="mini">↻</button>
+    </div>
+
+    <label class="fld">探索するテスト文字列（値のどこに在るか報告します・空欄なら探索しない）
+      <input id="needle" type="text" value="TEXT_EXTRACT_TEST_12345">
+    </label>
+
+    <label class="fld">走査するクリップ数の上限（0 = 上限なし。まず 20 程度で試すのが安全）
+      <input id="maxClips" type="number" value="0" step="1" min="0">
+    </label>
+
+    <label class="fld">取得モード
+      <select id="valueMode">
+        <option value="full" selected>full（全パラメータの値を読む・推奨）</option>
+        <option value="meta">meta（名前と件数だけ・高速/最安全）</option>
+      </select>
+    </label>
+
+    <button id="runBtn" class="primary">① テキスト取得診断を実行</button>
+    <div id="result" class="result"></div>
+
+    <div class="listhead"><span>② 抽出できた本文（プレビュー）</span>
+      <button id="previewBtn" class="mini">抽出</button></div>
+    <div id="previewSummary" class="kv"></div>
+    <div id="previewBox" class="scroll"></div>
+
+    <div class="listhead"><span>③ Adobe「テキスト→グラフィック→書き出し」と比較</span>
+      <button id="csvBtn" class="mini wide">CSV/TXT を選択</button></div>
+    <div id="cmpSummary" class="kv"></div>
+    <div id="cmpBox" class="scroll"></div>
+    <button id="saveBtn" class="mini wide">④ 診断＋比較レポートを保存</button>
+
+    <div class="loghead">
+      <span>ログ</span>
+      <button id="logClear" class="mini">クリア</button>
+    </div>
+    <pre id="log" class="log"></pre>
+  </div>
+
+  <script src="../js/CSInterface.js"></script>
+  <script src="extract.js"></script>
+  <script src="textdiag.js"></script>
+</body>
+</html>

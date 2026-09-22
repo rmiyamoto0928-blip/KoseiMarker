@@ -5,4 +5,10 @@
       <Host Name="PPRO" Port="7778"/>
     </HostList>
   </Extension>
+  <!-- 診断パネル（開発・調査専用）。Chrome で localhost:7779 を開くと DevTools が使える -->
+  <Extension Id="com.koseimarker.textdiag">
+    <HostList>
+      <Host Name="PPRO" Port="7779"/>
+    </HostList>
+  </Extension>
 </ExtensionList>
