@@ -273,3 +273,63 @@ Adobe 公式 CEP サンプルの ReadMe（2025年11月 / Premiere Pro 25.6 時�
 
 ＝ **CEP は 25.6 から約1年で打ち切り予定**。本パネル（CEP）の移行判断が別途必要。
 テキスト本文の正式APIも UXP 27 側にあるため、**取得方式の選定と移行計画は分けて考える**こと。
+
+---
+
+## 8. ローカル追加調査（2026-09-22・本人の Mac 上で確認）
+
+クラウド環境（Linux・Premiere 無し）では確かめられなかった点を、本人の Mac で確認した結果。
+
+### 8-1. 実機の Premiere のバージョン
+
+| アプリ | 版（Info.plist） |
+| --- | --- |
+| Adobe Premiere Pro 2026 | **26.0.2**（build 26.0.2.2） |
+| Adobe Premiere Pro 2025 | 25.1 |
+
+→ UXP の `MogrtText`（27.0 beta の型定義にだけある）は**使えない版**。今すぐ試せるのは CEP 経路。
+
+### 8-2. sozaidrop-panel にも「誤字脱字チェック」は無い
+
+`~/sozaidrop-panel` を `mText` / `Source Text` / `getMGTComponent` / `誤字` / `typo` で全文検索して該当ゼロ
+（効果音・BGM 取り込みパネル）。インストール済みの自作パネル全部を同じ語で検索しても、
+タイムラインのテキストを読んで誤字チェックする処理は見つからなかった。
+→ 前提ずれ①（「クリップ名から取得する誤字チェック」は現存しない）は確定。
+
+### 8-3. 同じ Mac の別パネルに残っていた実物の手がかり（推測ではなくコード由来）
+
+| 出どころ | 分かっていること | 実機での状態 |
+| --- | --- | --- |
+| TelopStyle `jsx/hostscript.jsx` の `tsGetSelectedTexts()` | 選択クリップの「ソーステキスト」を CEP の `param.getValue()` で読むと、**文字＋装飾が入った1つの JSON 文字列**が返る（本文は `mTextParam.mStyleSheet.mText`） | 装飾の差し替えで実運用 |
+| TextTransfer（`js/lib/textjson.js`） | 上と同じ JSON の `mText` だけ差し替える。MOGRT は `getMGTComponent()` の枠を読む | **MOGRT は実機で「全然変なものが入る」＝未解決**（2026-08-09） |
+| TelopSkin `tools/read_project_texts.py` | `.prproj`（gzip XML）の `ソーステキスト` → `StartKeyframeValue`（base64 の FlatBuffer）から本文を直接読む | 実プロジェクト200本で**取得率 98.84%**（同じ中身は2回目から BinaryHash だけになる点を補正後。2026-07-31） |
+
+注意：TelopSkin の説明文は「ExtendScript から読めるのはレイヤー名だけ」と書いており、TelopStyle の実運用と食い違う。
+**どちらが正しいか（版・グラフィックの種類で変わるのか）を決めるのが今回の診断**。
+
+→ STEP10 の候補 H に **「.prproj を直接読む」**を追加する（非公式の形式・Premiere を開かなくても読める・保存前の変更は反映されない・自動保存ファイルは書きかけのことがある）。
+
+### 8-4. 診断パネルの取り付け方（本番パネルに触れない形）
+
+本番の「チェック｜校正マーカー」は `~/KoseiMarker`（master）へのリンクで動いている。
+このブランチへ切り替えると本番も切り替わり、しかも master にだけある1コミット（`8cd8eef` スマート選択）が消えて見えるため、**切り替えない**。
+代わりに、別の Bundle ID の入れ物を作ってリンクした：
+
+```
+~/premiere-extensions/TextDiag/
+  CSXS/manifest.xml   … Bundle ID com.ryuji.textdiag（この入れ物専用）
+  diag -> ~/KoseiMarker-textdiag/diag   （このブランチの worktree）
+  css  -> ~/KoseiMarker-textdiag/css
+  js   -> ~/KoseiMarker-textdiag/js
+~/Library/Application Support/Adobe/CEP/extensions/TextDiag -> ~/premiere-extensions/TextDiag
+```
+
+外すとき：`rm "$HOME/Library/Application Support/Adobe/CEP/extensions/TextDiag"`（リンクを消すだけ）。
+あとで master に取り込むときは、このブランチを master に**マージ**する（master を巻き戻さない）。
+
+### 8-5. 次にやること（3方式の突き合わせ）
+
+1. 実案件のシーケンスを開いて診断パネル「①」→「④」（読み取りのみ・何も変更しない）
+2. 同じシーケンスで Adobe の「テキスト → グラフィック → … → 書き出し → CSV」
+3. プロジェクトを保存
+4. AI が **CEP 診断 / Adobe CSV / .prproj 直読み** の3つを件数・本文・改行・トラック・時刻で突き合わせる
