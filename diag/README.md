@@ -351,3 +351,14 @@ Adobe 公式 CEP サンプルの ReadMe（2025年11月 / Premiere Pro 25.6 時�
 - 比較スクリプト：`diag/compare/compare3.js`・`diag/compare/h_blobhead.py`（結果ファイルは案件の文字を含むのでリポジトリに入れない）。
 
 **暫定の結論**：本文の取得は **H（.prproj 直読み）を本線**にし、AE 製 MOGRT（Capsule の textEditValue）を読めるよう広げる。保存前の変更は入らないので、パネルから使うときは「保存してから読む」手順にする。A（CEP）は MOGRT の補助だけに使える。未検証＝ネスト・無効クリップ・複数トラックの重なり・Premiere 製 MOGRT（今回の案件に無かった）。
+
+### 8-7. 本線の部品ができた（2026-09-22 夕・実機確認済み）
+
+8-6 の結論どおり、.prproj 直読みを AE 製 MOGRT まで広げた部品を作った。
+
+- 置き場所：`~/premiere-extensions/EditAssistant/tools/read_all_texts.py`（python3 3.9・標準ライブラリだけ。旧部品 `read_project_texts.py` は import するだけで書き換えていない）
+- 呼び方：`/usr/bin/python3 read_all_texts.py <project.prproj> [シーケンス名]` → stdout に JSON（`items[]` の kind＝text/mogrt、`summary` に読めなかった場所と理由）。項目と理由の一覧はファイル先頭の説明が正本
+- 使う側：編集アシスタント③（誤字脱字）と Slack 業務自動化の2つ
+- 結果：手元300本で普通のテロップ 17,696行が旧部品と差0・AE 製 461行を読めない0・速さ同じ（1.009倍）。実機（Premiere 26.0.2・8-6 と同じ案件）で ③ のログ「プロジェクトファイル 62 / テンプレート 0」＝8-6 で取りこぼした AE 製2件も .prproj から取れた
+- あわせて ③ の「※ N か所は中身が多すぎて途中までしか見ていません」のうその注意を直した（テロップかどうかを見分けるためのぞいた分の打ち切りを別の数に分け、ログにだけ「対応は要りません」付きで残す）
+- 設計書・実装ノート：`EditAssistant/docs/specs/2026-09-22-all-texts-reader-design.md`・`docs/notes/2026-09-22-all-texts-reader-notes.md`
