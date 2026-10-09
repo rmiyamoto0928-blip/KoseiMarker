@@ -14,9 +14,9 @@
     --ss-menu-bg-default: #2f2f2f;
     --ss-menu-fg-default: #e8e8e8;
     --ss-menu-border-default: #5a5a5a;
-    --ss-accent-default: #0096d6;      /* Premiere の水色 */
+    --ss-accent-default: #00418E;      /* ドラゴンズブルー（紺の塗り・上は白字）2026-10-10 dragons-palette.md */
     --ss-accent-fg-default: #ffffff;
-    --ss-on-bg-default: rgba(0, 150, 214, 0.22);
+    --ss-on-bg-default: rgba(94, 159, 232, 0.22);   /* 明るい青 #5E9FE8 を薄く */
     --ss-menu-shadow-default: 0 4px 16px rgba(0, 0, 0, 0.55);
     --ss-font-default: 12px;
     --ss-radius-default: 3px;

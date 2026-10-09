@@ -32,12 +32,12 @@ textarea {
 .opts label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
 
 .primary {
-  background: #2d7dd2; color: #fff; border: none;
+  background: #F5C400; color: #10203A; border: none;
   border-radius: 4px; padding: 9px; cursor: pointer;
   font-size: 13px; font-weight: bold;
 }
-.primary:hover { background: #3a8ee0; }
-.primary:active { background: #256bb5; }
+.primary:hover { background: #FFD84D; }
+.primary:active { background: #F5C400; }
 
 .danger {
   background: #3a3a3a; color: #ff8a8a; border: 1px solid #6a4444;
@@ -63,7 +63,7 @@ textarea {
   border-radius: 3px; padding: 4px; cursor: pointer; font-size: 11px;
 }
 .filt:hover { background: #3d3d3d; }
-.filt.active { background: #2d7dd2; color: #fff; border-color: #2d7dd2; }
+.filt.active { background: #00418E; color: #fff; border-color: #5E9FE8; }
 
 .counts { color: #9fd49f; font-size: 11px; min-height: 14px; }
 
@@ -81,12 +81,12 @@ textarea {
 .mitem { padding: 6px 8px; border-bottom: 1px solid #383838; cursor: pointer; border-left: 3px solid transparent; }
 .mitem.kosei { border-left-color: #c84a4a; }
 .mitem:last-child { border-bottom: none; }
-.mitem:hover { background: #2f3b46; }
+.mitem:hover { background: rgba(94,159,232,0.22); }
 .mitem .mname { color: #7fb3e0; font-size: 10px; }
 .mitem .mcmt { color: #d8d8d8; font-size: 11px; white-space: pre-wrap; margin-top: 2px; }
 .mitem.done { border-left-color: #4a9e4a; opacity: 0.65; }
 .mitem.done .mcmt { text-decoration: line-through; }
-.mitem.sel { background: #33424e; outline: 1px solid #2d7dd2; }
+.mitem.sel { background: #173457; outline: 1px solid #5E9FE8; }
 
 .mact { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
 .act {
@@ -100,7 +100,7 @@ textarea {
 
 .cedit {
   width: 100%; min-height: 48px; margin-top: 4px;
-  background: #1e1e1e; color: #eee; border: 1px solid #2d7dd2;
+  background: #1e1e1e; color: #eee; border: 1px solid #5E9FE8;
   border-radius: 3px; padding: 4px; font-size: 11px; resize: vertical;
 }
 
